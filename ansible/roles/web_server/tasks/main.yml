@@ -1,0 +1,15 @@
+- name: Clone application repository
+  git:
+    repo: https://github.com/your-username/DevOps-Assignment.git
+    dest: /opt/devops-app
+    force: yes
+
+- name: Copy environment file
+  copy:
+    src: .env
+    dest: /opt/devops-app/.env
+
+- name: Start application services
+  docker_compose:
+    project_src: /opt/devops-app/docker
+    state: present

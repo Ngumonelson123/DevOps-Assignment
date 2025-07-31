@@ -1,0 +1,25 @@
+- name: Update APT cache
+  apt: update_cache=yes
+- name: Install base packages
+  apt: name={{ item }} state=present
+  loop: 
+    - docker.io
+    - docker-compose
+    - git
+    - python3
+    - python3-pip
+    - nodejs
+    - npm
+
+
+- name: Enable and start Docker service
+  systemd:
+    name: docker
+    enabled: true
+    state: started
+
+- name: Add user to Docker group
+  user:
+    name: ubuntu
+    group: docker
+    append: true

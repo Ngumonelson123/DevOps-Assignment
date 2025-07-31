@@ -1,0 +1,36 @@
+server {
+    listen 80;
+    server_name _;
+    
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}   
+
+server {
+    listen 443 ssl;
+    server_name _;
+    
+    ssl_certificate /etc/nginx/certs/server.crt;
+    ssl_certificate_key /etc/nginx/certs/server.key;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers 'HIGH:!aNULL:!MD5';
+
+    location /api/python/ {
+        proxy_pass http://{{ hostvars[groups['WebServer'][0]]['ansible_default_ipv4']['address'] }}:5000/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    location /api/node/ {
+        proxy_pass http://{{ hostvars[groups['WebServer'][0]]['ansible_default_ipv4']['address'] }}:3000/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    location / {
+        root /var/www/html;
+        index index.html index.htm;
+    }
+}

@@ -1,0 +1,64 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+        - devops_network 
+
+  python-service:
+    build:
+      context: ../app-python
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=${POSTGRES_PORT}
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    networks:
+      - devops_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/hello"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  node-service:
+    build: ../app-nodejs
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=${POSTGRES_PORT}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    networks:
+      - devops_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+networks:
+  devops_network:
+
+volumes:
+  postgres_data:

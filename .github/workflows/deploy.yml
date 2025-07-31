@@ -1,0 +1,64 @@
+name: Deploy Application
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.11'
+    
+    - name: Install Python dependencies
+      run: |
+        cd app-python
+        pip install -r requirements.txt
+    
+    - name: Test Python app
+      run: |
+        cd app-python
+        python -m py_compile app.py
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Test Node.js app
+      run: |
+        cd app-nodejs
+        npm install
+        node -c index.js
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build Docker images
+      run: |
+        docker build -t devops-python ./app-python
+        docker build -t devops-node ./app-nodejs
+
+  deploy:
+    needs: [test, build]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy with Ansible
+      run: |
+        echo "Installing Ansible..."
+        pip install ansible
+        echo "Running deployment playbook..."
+        # ansible-playbook -i ansible/inventory.ini ansible/playbook.yml

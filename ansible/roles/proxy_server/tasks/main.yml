@@ -1,0 +1,16 @@
+- name: Install nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Template nginx configuration
+  template:
+    src: default.conf.j2
+    dest: /etc/nginx/sites-available/default
+  notify: restart nginx
+
+- name: Enable nginx
+  systemd:
+    name: nginx
+    enabled: yes
+    state: started

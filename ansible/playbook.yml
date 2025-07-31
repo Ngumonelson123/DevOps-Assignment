@@ -1,0 +1,13 @@
+- name: Configure WebServer
+  hosts: WebServer
+  become: true
+  roles:
+    - common
+    - web_server
+
+- name: Configure Proxy Server
+  hosts: proxy
+  become: true
+  roles:
+    - common
+    - proxy_server
