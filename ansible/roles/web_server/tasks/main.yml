@@ -10,12 +10,9 @@
     dest: /opt/devops-app/.env
 
 - name: Copy environment file to docker directory
-  shell: |
-    cp /opt/devops-app/.env /opt/devops-app/docker/.env
+  shell: cp /opt/devops-app/.env /opt/devops-app/docker/.env
   become: yes
 
 - name: Start application services
-  shell: |
-    cd /opt/devops-app/docker
-    docker-compose up -d
+  shell: cd /opt/devops-app/docker && docker-compose up -d
   become: yes
