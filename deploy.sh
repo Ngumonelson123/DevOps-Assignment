@@ -15,6 +15,12 @@ terraform init
 terraform apply -auto-approve
 cd ..
 
+# Push code to GitHub
+echo "📤 Pushing code to GitHub..."
+git add .
+git commit -m "Automated deployment $(date)" || echo "No changes to commit"
+git push origin main || echo "Push failed or no remote configured"
+
 # Update inventory with dynamic IPs
 echo "📝 Updating inventory..."
 ./update-inventory.sh
@@ -27,6 +33,7 @@ cd ..
 
 # Start applications
 echo "🐳 Starting applications..."
+cp .env docker/.env
 cd docker
 docker-compose up -d
 cd ..

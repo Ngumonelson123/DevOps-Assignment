@@ -20,11 +20,11 @@ services:
       dockerfile: Dockerfile
     restart: always
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=devops
+      - POSTGRES_PASSWORD=Secrets@123
+      - POSTGRES_DB=devopsdb
       - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_PORT=5432
     ports:
       - "5000:5000"
     depends_on:
@@ -32,7 +32,7 @@ services:
     networks:
       - devops_network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/hello"]
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -41,11 +41,11 @@ services:
     build: ../app-nodejs
     restart: always
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=devops
+      - POSTGRES_PASSWORD=Secrets@123
+      - POSTGRES_DB=devopsdb
       - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_PORT=5432
     ports:
       - "3000:3000"
     depends_on:

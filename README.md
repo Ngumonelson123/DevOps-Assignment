@@ -50,7 +50,7 @@ docker-compose up -d
 
 ## Services Access
 - **Applications**: http://your-proxy-server
-- **Grafana**: http://your-server:3000
+- **Grafana**: http://your-server:3001
 - **Prometheus**: http://your-server:9090
 - **Kibana**: http://your-server:5601
 

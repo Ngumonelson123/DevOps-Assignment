@@ -4,13 +4,19 @@
   apt: name={{ item }} state=present
   loop: 
     - docker.io
-    - docker-compose
     - git
     - python3
     - python3-pip
     - nodejs
     - npm
+    - curl
 
+- name: Install Docker Compose v2
+  shell: |
+    curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+    ln -sf /usr/local/bin/docker-compose /usr/bin/docker-compose
+  become: yes
 
 - name: Enable and start Docker service
   systemd:
@@ -21,5 +27,5 @@
 - name: Add user to Docker group
   user:
     name: ubuntu
-    group: docker
+    groups: docker
     append: true

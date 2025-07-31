@@ -4,7 +4,7 @@ services:
   prometheus:
     image: prom/prometheus
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
     restart: always
@@ -18,7 +18,7 @@ services:
   grafana:
     image: grafana/grafana
     ports:
-      - "3000:3000"
+      - "3001:3000"
     volumes:
       - grafana-storage:/var/lib/grafana
     restart: always
@@ -27,7 +27,7 @@ services:
     image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor
     ports:
-      - "8080:8080"
+      - "8085:8080"
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro

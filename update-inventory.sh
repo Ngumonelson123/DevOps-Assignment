@@ -9,10 +9,10 @@ cd ..
 # Update Ansible inventory
 cat > ansible/inventory.ini << EOF
 [WebServer]
-$WEB_SERVER_IP ansible_user=ubuntu ansible_ssh_private_key_file=/home/nelson-ngumo/.ssh/devops-key
+$WEB_SERVER_IP ansible_user=ubuntu ansible_ssh_private_key_file=/home/nelson-ngumo/.ssh/devops-key ansible_ssh_common_args='-o IdentitiesOnly=yes'
 
 [proxy]
-$PROXY_SERVER_IP ansible_user=ubuntu ansible_ssh_private_key_file=/home/nelson-ngumo/.ssh/devops-key
+$PROXY_SERVER_IP ansible_user=ubuntu ansible_ssh_private_key_file=/home/nelson-ngumo/.ssh/devops-key ansible_ssh_common_args='-o IdentitiesOnly=yes'
 EOF
 
 echo "Inventory updated with:"

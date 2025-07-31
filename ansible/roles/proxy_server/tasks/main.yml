@@ -3,6 +3,22 @@
     name: nginx
     state: present
 
+- name: Create nginx certs directory
+  file:
+    path: /etc/nginx/certs
+    state: directory
+    mode: '0755'
+
+- name: Generate SSL certificate
+  shell: |
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout /etc/nginx/certs/server.key \
+    -out /etc/nginx/certs/server.crt \
+    -subj "/C=US/ST=State/L=City/O=DevOps/CN={{ ansible_default_ipv4.address }}" \
+    -addext "subjectAltName=IP:{{ ansible_default_ipv4.address }}"
+  args:
+    creates: /etc/nginx/certs/server.crt
+
 - name: Template nginx configuration
   template:
     src: default.conf.j2

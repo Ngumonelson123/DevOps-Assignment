@@ -1,2 +1,8 @@
 #  .gitignore
 .env
+
+# Terraform files
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
