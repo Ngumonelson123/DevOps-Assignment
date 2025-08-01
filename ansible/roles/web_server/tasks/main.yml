@@ -1,16 +1,38 @@
+---
+- name: Install git
+  apt:
+    name: git
+    state: present
+  become: yes
+
+- name: Remove existing app directory
+  file:
+    path: /opt/devops-app
+    state: absent
+  become: yes
+
 - name: Clone application repository
   git:
-    repo: https://github.com/nelson-ngumo/DevOps-Assignment.git
+    repo: https://github.com/Ngumonelson123/DevOps-Assignment.git
     dest: /opt/devops-app
     force: yes
+    accept_hostkey: yes
+  become: yes
+  timeout: 60
 
 - name: Copy environment file
   copy:
-    src: /home/nelson-ngumo/DevOps-Assignment/.env
+    src: .env
     dest: /opt/devops-app/.env
+    mode: '0644'
+  become: yes
 
 - name: Copy environment file to docker directory
-  shell: cp /opt/devops-app/.env /opt/devops-app/docker/.env
+  copy:
+    src: /opt/devops-app/.env
+    dest: /opt/devops-app/docker/.env
+    remote_src: yes
+    mode: '0644'
   become: yes
 
 - name: Start application services

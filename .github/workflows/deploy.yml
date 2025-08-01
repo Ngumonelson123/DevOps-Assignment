@@ -53,12 +53,27 @@ jobs:
     needs: [test, build]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+    environment: production
     steps:
     - uses: actions/checkout@v3
     
-    - name: Deploy with Ansible
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    
+    - name: Setup SSH key
       run: |
-        echo "Installing Ansible..."
-        pip install ansible
-        echo "Running deployment playbook..."
-        # ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/devops-key
+        chmod 600 ~/.ssh/devops-key
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ansible terraform
+    
+    - name: Run automated deployment
+      run: ./deploy.sh
