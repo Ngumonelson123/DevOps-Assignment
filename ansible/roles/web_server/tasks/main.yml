@@ -38,3 +38,19 @@
 - name: Start application services
   shell: cd /opt/devops-app/docker && docker-compose up -d
   become: yes
+
+- name: Start monitoring services
+  shell: cd /opt/devops-app/monitoring && docker-compose up -d
+  become: yes
+
+- name: Wait for services to be ready
+  wait_for:
+    port: "{{ item }}"
+    host: "{{ ansible_default_ipv4.address }}"
+    delay: 10
+    timeout: 60
+  loop:
+    - 3000
+    - 5000
+    - 3001
+    - 9090
