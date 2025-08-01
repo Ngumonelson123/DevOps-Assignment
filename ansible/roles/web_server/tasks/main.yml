@@ -39,6 +39,24 @@
   shell: cd /opt/devops-app/docker && docker-compose up -d
   become: yes
 
+- name: Create monitoring certs directory
+  file:
+    path: /opt/devops-app/monitoring/certs
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Generate SSL certificate for monitoring
+  shell: >
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048
+    -keyout /opt/devops-app/monitoring/certs/server.key
+    -out /opt/devops-app/monitoring/certs/server.crt
+    -subj "/C=US/ST=State/L=City/O=DevOps/CN={{ ansible_default_ipv4.address }}"
+    -addext "subjectAltName=IP:{{ ansible_default_ipv4.address }}"
+  args:
+    creates: /opt/devops-app/monitoring/certs/server.crt
+  become: yes
+
 - name: Start monitoring services
   shell: cd /opt/devops-app/monitoring && docker-compose up -d
   become: yes
