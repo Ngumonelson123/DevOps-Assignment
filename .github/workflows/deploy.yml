@@ -70,10 +70,15 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/devops-key
         chmod 600 ~/.ssh/devops-key
     
-    - name: Install dependencies
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.5.0
+    
+    - name: Install Ansible
       run: |
         sudo apt-get update
-        sudo apt-get install -y ansible terraform
+        sudo apt-get install -y ansible
     
     - name: Run automated deployment
       run: ./deploy.sh

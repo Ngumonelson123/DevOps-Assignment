@@ -35,6 +35,14 @@
     mode: '0644'
   become: yes
 
+- name: Copy environment file to monitoring directory
+  copy:
+    src: /opt/devops-app/.env
+    dest: /opt/devops-app/monitoring/.env
+    remote_src: yes
+    mode: '0644'
+  become: yes
+
 - name: Start application services
   shell: cd /opt/devops-app/docker && docker-compose up -d
   become: yes
@@ -60,6 +68,7 @@
 - name: Start monitoring services
   shell: cd /opt/devops-app/monitoring && docker-compose up -d
   become: yes
+  timeout: 300
 
 - name: Wait for services to be ready
   wait_for:

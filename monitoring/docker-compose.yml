@@ -1,35 +1,33 @@
-version: '3.8'
-
 services:
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:latest
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
-    restart: always
+    restart: unless-stopped
+    mem_limit: 512m
 
   node-exporter:
-    image: prom/node-exporter
+    image: prom/node-exporter:latest
     ports:
       - "9100:9100"
-    restart: always
+    restart: unless-stopped
+    mem_limit: 128m
 
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:latest
     ports:
       - "3001:3000"
     volumes:
       - grafana-storage:/var/lib/grafana
-      - ./certs:/etc/ssl/certs
     environment:
-      - GF_SERVER_PROTOCOL=https
-      - GF_SERVER_CERT_FILE=/etc/ssl/certs/server.crt
-      - GF_SERVER_CERT_KEY=/etc/ssl/certs/server.key
-    restart: always
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
+    restart: unless-stopped
+    mem_limit: 256m
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
+    image: gcr.io/cadvisor/cadvisor:v0.47.0
     container_name: cadvisor
     ports:
       - "8085:8080"
@@ -38,30 +36,8 @@ services:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
-    restart: always
-
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ports:
-      - "9200:9200"
-    volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
-    restart: always
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.8.0
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    ports:
-      - "5601:5601"
-    depends_on:
-      - elasticsearch
-    restart: always
+    restart: unless-stopped
+    mem_limit: 256m
 
 volumes:
   grafana-storage:
-  elasticsearch-data:

@@ -9,7 +9,7 @@ This project demonstrates a complete DevOps pipeline with Infrastructure as Code
 - **Reverse Proxy**: Nginx with SSL/TLS
 - **Infrastructure**: AWS EC2 instances via Terraform
 - **Configuration**: Ansible automation
-- **Monitoring**: Prometheus + Grafana + ELK Stack
+- **Monitoring**: Prometheus + Grafana
 - **CI/CD**: GitHub Actions
 
 ## Quick Start
@@ -52,7 +52,7 @@ docker-compose up -d
 - **Applications**: http://your-proxy-server
 - **Grafana**: http://your-server:3001
 - **Prometheus**: http://your-server:9090
-- **Kibana**: http://your-server:5601
+
 
 ## Testing
 ```bash
@@ -77,8 +77,7 @@ docker-compose ps
 - Environment variable management
 - Container health checks
 
-## Monitoring & Logging
+## Monitoring
 - System metrics via Prometheus
 - Application dashboards in Grafana
-- Centralized logging with ELK Stack
 - Container monitoring with cAdvisor

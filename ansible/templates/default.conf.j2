@@ -18,7 +18,7 @@ server {
     ssl_ciphers 'HIGH:!aNULL:!MD5';
 
     location /api/python/ {
-        proxy_pass http://{{ hostvars[groups['WebServer'][0]]['ansible_default_ipv4']['address'] }}:5000/;
+        proxy_pass http://{{ groups['WebServer'][0] }}:5000/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -26,7 +26,7 @@ server {
     }
 
     location /api/node/ {
-        proxy_pass http://{{ hostvars[groups['WebServer'][0]]['ansible_default_ipv4']['address'] }}:3000/;
+        proxy_pass http://{{ groups['WebServer'][0] }}:3000/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -34,8 +34,7 @@ server {
     }
 
     location /grafana/ {
-        proxy_pass https://{{ hostvars[groups['WebServer'][0]]['ansible_default_ipv4']['address'] }}:3001/;
-        proxy_ssl_verify off;
+        proxy_pass http://{{ groups['WebServer'][0] }}:3001/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -43,15 +42,7 @@ server {
     }
 
     location /prometheus/ {
-        proxy_pass http://{{ hostvars[groups['WebServer'][0]]['ansible_default_ipv4']['address'] }}:9090/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    location /kibana/ {
-        proxy_pass http://{{ hostvars[groups['WebServer'][0]]['ansible_default_ipv4']['address'] }}:5601/;
+        proxy_pass http://{{ groups['WebServer'][0] }}:9090/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -59,7 +50,7 @@ server {
     }
 
     location /cadvisor/ {
-        proxy_pass http://{{ hostvars[groups['WebServer'][0]]['ansible_default_ipv4']['address'] }}:8085/;
+        proxy_pass http://{{ groups['WebServer'][0] }}:8085/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -67,7 +58,7 @@ server {
     }
 
     location / {
-        return 200 "Nginx Reverse Proxy with SSL is working! Try /api/python/, /api/node/, /grafana/, /prometheus/, /kibana/";
+        return 200 "Nginx Reverse Proxy with SSL is working! Try /api/python/, /api/node/, /grafana/, /prometheus/, /cadvisor/";
         add_header Content-Type text/plain;
     }
 }
