@@ -54,9 +54,18 @@ fi
 
 # Get server IPs using terraform state (works in GitHub Actions)
 terraform state pull > state.json
-WEB_SERVER_IP=$(grep -A 10 '"web_server_ip"' state.json | grep '"value"' | cut -d'"' -f4)
-PROXY_SERVER_IP=$(grep -A 10 '"proxy_server_ip"' state.json | grep '"value"' | cut -d'"' -f4)
-WEB_SERVER_PRIVATE_IP=$(grep -A 10 '"web_server_private_ip"' state.json | grep '"value"' | cut -d'"' -f4)
+WEB_SERVER_IP=$(grep -A 5 '"web_server_ip"' state.json | grep '"value"' | head -1 | cut -d'"' -f4 | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
+PROXY_SERVER_IP=$(grep -A 5 '"proxy_server_ip"' state.json | grep '"value"' | head -1 | cut -d'"' -f4 | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
+WEB_SERVER_PRIVATE_IP=$(grep -A 5 '"web_server_private_ip"' state.json | grep '"value"' | head -1 | cut -d'"' -f4 | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
+
+# Ensure SSH key exists and has correct permissions
+if [ ! -f ~/.ssh/devops-key ]; then
+    echo "SSH key not found, creating from GitHub secret..."
+    mkdir -p ~/.ssh
+    # In GitHub Actions, the SSH key should be provided via secrets
+    chmod 700 ~/.ssh
+    chmod 600 ~/.ssh/devops-key 2>/dev/null || true
+fi
 
 echo "Server Information:"
 echo "   Web Server: $WEB_SERVER_IP"

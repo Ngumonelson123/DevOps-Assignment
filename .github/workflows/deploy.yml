@@ -69,6 +69,7 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/devops-key
         chmod 600 ~/.ssh/devops-key
+        ssh-keyscan -H github.com >> ~/.ssh/known_hosts
     
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
