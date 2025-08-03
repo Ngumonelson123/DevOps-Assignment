@@ -25,6 +25,16 @@
     dest: /etc/nginx/sites-available/default
   notify: restart nginx
 
+- name: Set proper permissions on SSL files
+  file:
+    path: "{{ item }}"
+    mode: '0600'
+    owner: root
+    group: root
+  loop:
+    - /etc/nginx/certs/server.key
+    - /etc/nginx/certs/server.crt
+
 - name: Enable nginx
   systemd:
     name: nginx

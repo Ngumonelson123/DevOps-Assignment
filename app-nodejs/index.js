@@ -12,16 +12,37 @@ const pool = new Pool({
   port: process.env.POSTGRES_PORT || 5432,
 });
 
-app.get('/', async (req, res) => {
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Hello from Node.js!',
+    timestamp: new Date().toISOString(),
+    service: 'nodejs-express'
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'healthy', service: 'nodejs-express' });
+});
+
+app.get('/db', async (req, res) => {
   try {
     const client = await pool.connect();
-    const result = await client.query("SELECT NOW()");
+    const result = await client.query('SELECT NOW()');
     client.release();
-    res.send('Hello from Node.js + PostgreSQL is working!');
+    res.json({
+      message: 'Database connection successful!',
+      database: process.env.POSTGRES_DB || 'devopsdb',
+      timestamp: new Date().toISOString(),
+      db_time: result.rows[0].now
+    });
   } catch (err) {
-    res.status(500).send('Error connecting to the database: ' + err.message);
+    res.status(500).json({
+      error: `Database connection failed: ${err.message}`,
+      timestamp: new Date().toISOString()
+    });
   }
 });
+
 app.listen(port, () => {
   console.log(`Node.js app listening at http://localhost:${port}`);
 });
