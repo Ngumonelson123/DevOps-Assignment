@@ -52,10 +52,14 @@ else
     exit 1
 fi
 
-# Get server IPs using simple text parsing
-WEB_SERVER_IP=$(terraform output web_server_ip | tr -d '"')
-PROXY_SERVER_IP=$(terraform output proxy_server_ip | tr -d '"')
-WEB_SERVER_PRIVATE_IP=$(terraform output web_server_private_ip | tr -d '"')
+# Get server IPs by parsing terraform output directly
+terraform output web_server_ip | tr -d '"' > /tmp/web_ip.txt
+terraform output proxy_server_ip | tr -d '"' > /tmp/proxy_ip.txt
+terraform output web_server_private_ip | tr -d '"' > /tmp/web_private_ip.txt
+
+WEB_SERVER_IP=$(tail -1 /tmp/web_ip.txt | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
+PROXY_SERVER_IP=$(tail -1 /tmp/proxy_ip.txt | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
+WEB_SERVER_PRIVATE_IP=$(tail -1 /tmp/web_private_ip.txt | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
 
 echo "Server Information:"
 echo "   Web Server: $WEB_SERVER_IP"
