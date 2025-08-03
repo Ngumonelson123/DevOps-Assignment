@@ -88,11 +88,11 @@ print_status "Inventory updated"
 
 # Wait for servers to be ready
 echo "Waiting for servers to be ready..."
-sleep 60
+sleep 30
 
 # Configure servers with Ansible
 echo "Configuring servers..."
-if ansible-playbook -i inventory.ini playbook.yml; then
+if ansible-playbook -i inventory.ini playbook.yml --forks=10; then
     print_status "Server configuration completed"
 else
     print_error "Server configuration failed"
