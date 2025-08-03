@@ -43,6 +43,13 @@
     mode: '0644'
   become: yes
 
+- name: Update monitoring docker-compose.yml
+  copy:
+    src: ../monitoring/docker-compose.yml
+    dest: /opt/devops-app/monitoring/docker-compose.yml
+    mode: '0644'
+  become: yes
+
 - name: Start application services
   shell: cd /opt/devops-app/docker && docker-compose up -d
   become: yes
