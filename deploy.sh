@@ -56,10 +56,10 @@ echo "   Web Private IP: $WEB_SERVER_PRIVATE_IP"
 cd ../ansible
 cat > inventory.ini << EOF
 [WebServer]
-$WEB_SERVER_IP ansible_user=ubuntu ansible_ssh_private_key_file=/home/nelson-ngumo/.ssh/devops-key ansible_ssh_common_args='-o IdentitiesOnly=yes'
+$WEB_SERVER_IP ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/devops-key ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 
 [proxy]
-$PROXY_SERVER_IP ansible_user=ubuntu ansible_ssh_private_key_file=/home/nelson-ngumo/.ssh/devops-key ansible_ssh_common_args='-o IdentitiesOnly=yes'
+$PROXY_SERVER_IP ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/devops-key ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 EOF
 
 print_status "Inventory updated"
@@ -80,7 +80,9 @@ fi
 # Push to GitHub
 echo "Pushing to GitHub..."
 cd ..
-ssh-agent bash -c 'ssh-add ~/.ssh/ngumonelson123_key; git add . && git commit -m "Automated deployment update" && git push origin main' || print_warning "Git push failed or no changes"
+git config --global user.email "action@github.com"
+git config --global user.name "GitHub Action"
+git add . && git commit -m "Automated deployment update" && git push origin main || print_warning "Git push failed or no changes"
 
 echo "Deployment completed successfully!"
 echo ""
