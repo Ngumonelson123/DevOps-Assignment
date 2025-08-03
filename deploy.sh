@@ -33,7 +33,7 @@ print_status "Prerequisites check passed"
 # Deploy infrastructure
 echo "Deploying infrastructure..."
 cd terraform
-terraform init
+terraform init -reconfigure
 if terraform plan -out=tfplan; then
     terraform apply tfplan
     print_status "Infrastructure deployed"
