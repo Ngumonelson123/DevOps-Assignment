@@ -50,6 +50,13 @@
     mode: '0644'
   become: yes
 
+- name: Create dynamic Prometheus configuration
+  template:
+    src: prometheus.yml.j2
+    dest: /opt/devops-app/monitoring/prometheus.yml
+    mode: '0644'
+  become: yes
+
 - name: Update monitoring docker-compose.yml
   copy:
     src: ../monitoring/docker-compose.yml

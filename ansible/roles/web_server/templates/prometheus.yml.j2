@@ -1,0 +1,27 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["{{ ansible_default_ipv4.address }}:9090"]
+
+  - job_name: "node-exporter"
+    static_configs:
+      - targets: ["{{ ansible_default_ipv4.address }}:9100"]
+
+  - job_name: "cadvisor"
+    static_configs:
+      - targets: ["{{ ansible_default_ipv4.address }}:8080"]
+
+  - job_name: "python-app"
+    static_configs:
+      - targets: ["{{ ansible_default_ipv4.address }}:5000"]
+    metrics_path: /metrics
+    scrape_interval: 30s
+
+  - job_name: "node-app"
+    static_configs:
+      - targets: ["{{ ansible_default_ipv4.address }}:3000"]
+    metrics_path: /metrics
+    scrape_interval: 30s
