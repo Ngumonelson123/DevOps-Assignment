@@ -9,48 +9,40 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: [python, nodejs]
     steps:
     - uses: actions/checkout@v3
     
     - name: Set up Python
+      if: matrix.app == 'python'
       uses: actions/setup-python@v3
       with:
         python-version: '3.11'
     
-    - name: Install Python dependencies
+    - name: Test Python app
+      if: matrix.app == 'python'
       run: |
         cd app-python
         pip install -r requirements.txt
-    
-    - name: Test Python app
-      run: |
-        cd app-python
         python -m py_compile app.py
     
     - name: Set up Node.js
+      if: matrix.app == 'nodejs'
       uses: actions/setup-node@v3
       with:
         node-version: '18'
     
     - name: Test Node.js app
+      if: matrix.app == 'nodejs'
       run: |
         cd app-nodejs
         npm install
         node -c index.js
 
-  build:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Build Docker images
-      run: |
-        docker build -t devops-python ./app-python
-        docker build -t devops-node ./app-nodejs
-
   deploy:
-    needs: [test, build]
+    needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment: production
@@ -86,6 +78,7 @@ jobs:
         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
         GRAFANA_ADMIN_PASSWORD: ${{ secrets.GRAFANA_ADMIN_PASSWORD }}
         NODE_ENV: ${{ secrets.NODE_ENV }}
         FLASK_ENV: ${{ secrets.FLASK_ENV }}

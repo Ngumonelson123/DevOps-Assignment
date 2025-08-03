@@ -26,6 +26,7 @@
       POSTGRES_DB={{ lookup('env', 'POSTGRES_DB') }}
       POSTGRES_USER={{ lookup('env', 'POSTGRES_USER') }}
       POSTGRES_PASSWORD={{ lookup('env', 'POSTGRES_PASSWORD') }}
+      POSTGRES_PORT={{ lookup('env', 'POSTGRES_PORT') }}
       GRAFANA_ADMIN_PASSWORD={{ lookup('env', 'GRAFANA_ADMIN_PASSWORD') }}
       NODE_ENV={{ lookup('env', 'NODE_ENV') }}
       FLASK_ENV={{ lookup('env', 'FLASK_ENV') }}
