@@ -67,7 +67,7 @@ jobs:
     - name: Setup SSH key
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/devops-key
+        echo "${{ secrets.SSH_PRIVATE_KEY_BASE64 }}" | base64 -d > ~/.ssh/devops-key
         chmod 600 ~/.ssh/devops-key
         ssh-keyscan -H github.com >> ~/.ssh/known_hosts
     
