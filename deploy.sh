@@ -52,10 +52,11 @@ else
     exit 1
 fi
 
-# Get server IPs
-WEB_SERVER_IP=$(terraform output -json | jq -r '.web_server_ip.value')
-PROXY_SERVER_IP=$(terraform output -json | jq -r '.proxy_server_ip.value')
-WEB_SERVER_PRIVATE_IP=$(terraform output -json | jq -r '.web_server_private_ip.value')
+# Get server IPs using terraform show
+terraform show -json > tfstate.json
+WEB_SERVER_IP=$(jq -r '.values.outputs.web_server_ip.value' tfstate.json)
+PROXY_SERVER_IP=$(jq -r '.values.outputs.proxy_server_ip.value' tfstate.json)
+WEB_SERVER_PRIVATE_IP=$(jq -r '.values.outputs.web_server_private_ip.value' tfstate.json)
 
 echo "Server Information:"
 echo "   Web Server: $WEB_SERVER_IP"
