@@ -33,6 +33,7 @@ print_status "Prerequisites check passed"
 # Deploy infrastructure
 echo "🏗️  Deploying infrastructure..."
 cd terraform
+terraform init
 if terraform plan -out=tfplan; then
     terraform apply tfplan
     print_status "Infrastructure deployed"
@@ -85,7 +86,7 @@ echo "🎉 Deployment completed successfully!"
 echo ""
 echo "🌐 Access your services:"
 echo "   Applications: https://$PROXY_SERVER_IP/api/python/ | https://$PROXY_SERVER_IP/api/node/"
-echo "   Grafana: http://$WEB_SERVER_IP:3001 (admin/devops123)"
+echo "   Grafana: http://$WEB_SERVER_IP:3001"
 echo "   Prometheus: http://$WEB_SERVER_IP:9090"
 echo "   cAdvisor: http://$WEB_SERVER_IP:8085"
 echo ""
