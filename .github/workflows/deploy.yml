@@ -62,8 +62,8 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
-    
+        aws-region: ${{ secrets.AWS_REGION }}
+
     - name: Setup SSH key
       run: |
         mkdir -p ~/.ssh
@@ -82,4 +82,11 @@ jobs:
         sudo apt-get install -y ansible
     
     - name: Run automated deployment
+      env:
+        POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        GRAFANA_ADMIN_PASSWORD: ${{ secrets.GRAFANA_ADMIN_PASSWORD }}
+        NODE_ENV: ${{ secrets.NODE_ENV }}
+        FLASK_ENV: ${{ secrets.FLASK_ENV }}
       run: ./deploy.sh
