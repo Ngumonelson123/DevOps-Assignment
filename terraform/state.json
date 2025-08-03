@@ -1,4 +1,4 @@
-[command]/home/runner/work/_temp/eed9eda6-2548-459c-a3e3-830527169d63/terraform-bin state pull
+[command]/home/runner/work/_temp/f003cc68-95b3-4eab-8802-191d169d235e/terraform-bin state pull
 {
   "version": 4,
   "terraform_version": "1.5.0",
