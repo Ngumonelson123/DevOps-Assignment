@@ -52,14 +52,11 @@ else
     exit 1
 fi
 
-# Get server IPs by parsing terraform output directly
-terraform output web_server_ip | tr -d '"' > /tmp/web_ip.txt
-terraform output proxy_server_ip | tr -d '"' > /tmp/proxy_ip.txt
-terraform output web_server_private_ip | tr -d '"' > /tmp/web_private_ip.txt
-
-WEB_SERVER_IP=$(tail -1 /tmp/web_ip.txt | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
-PROXY_SERVER_IP=$(tail -1 /tmp/proxy_ip.txt | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
-WEB_SERVER_PRIVATE_IP=$(tail -1 /tmp/web_private_ip.txt | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
+# Get server IPs using terraform state (works in GitHub Actions)
+terraform state pull > state.json
+WEB_SERVER_IP=$(grep -A 10 '"web_server_ip"' state.json | grep '"value"' | cut -d'"' -f4)
+PROXY_SERVER_IP=$(grep -A 10 '"proxy_server_ip"' state.json | grep '"value"' | cut -d'"' -f4)
+WEB_SERVER_PRIVATE_IP=$(grep -A 10 '"web_server_private_ip"' state.json | grep '"value"' | cut -d'"' -f4)
 
 echo "Server Information:"
 echo "   Web Server: $WEB_SERVER_IP"
