@@ -53,9 +53,13 @@ else
 fi
 
 # Get server IPs
-WEB_SERVER_IP=$(terraform output -raw web_server_ip)
-PROXY_SERVER_IP=$(terraform output -raw proxy_server_ip)
-WEB_SERVER_PRIVATE_IP=$(terraform output -raw web_server_private_ip)
+terraform output -raw web_server_ip > /tmp/web_ip
+terraform output -raw proxy_server_ip > /tmp/proxy_ip
+terraform output -raw web_server_private_ip > /tmp/web_private_ip
+
+WEB_SERVER_IP=$(cat /tmp/web_ip)
+PROXY_SERVER_IP=$(cat /tmp/proxy_ip)
+WEB_SERVER_PRIVATE_IP=$(cat /tmp/web_private_ip)
 
 echo "Server Information:"
 echo "   Web Server: $WEB_SERVER_IP"
