@@ -2,7 +2,7 @@
 
 set -e
 
-echo "🚀 Starting DevOps Deployment Automation..."
+echo "Starting DevOps Deployment Automation..."
 
 # Colors for output
 RED='\033[0;31m'
@@ -12,15 +12,15 @@ NC='\033[0m'
 
 # Function to print colored output
 print_status() {
-    echo -e "${GREEN}✅ $1${NC}"
+    echo -e "${GREEN} $1${NC}"
 }
 
 print_warning() {
-    echo -e "${YELLOW}⚠️  $1${NC}"
+    echo -e "${YELLOW}  $1${NC}"
 }
 
 print_error() {
-    echo -e "${RED}❌ $1${NC}"
+    echo -e "${RED} $1${NC}"
 }
 
 # Check prerequisites
@@ -31,7 +31,7 @@ command -v docker >/dev/null 2>&1 || { print_error "Docker not installed"; exit 
 print_status "Prerequisites check passed"
 
 # Deploy infrastructure
-echo "🏗️  Deploying infrastructure..."
+echo "Deploying infrastructure..."
 cd terraform
 terraform init
 if terraform plan -out=tfplan; then
@@ -47,7 +47,7 @@ WEB_SERVER_IP=$(terraform output -raw web_server_ip)
 PROXY_SERVER_IP=$(terraform output -raw proxy_server_ip)
 WEB_SERVER_PRIVATE_IP=$(terraform output -raw web_server_private_ip)
 
-echo "📋 Server Information:"
+echo "Server Information:"
 echo "   Web Server: $WEB_SERVER_IP"
 echo "   Proxy Server: $PROXY_SERVER_IP"
 echo "   Web Private IP: $WEB_SERVER_PRIVATE_IP"
@@ -65,11 +65,11 @@ EOF
 print_status "Inventory updated"
 
 # Wait for servers to be ready
-echo "⏳ Waiting for servers to be ready..."
+echo "Waiting for servers to be ready..."
 sleep 60
 
 # Configure servers with Ansible
-echo "⚙️  Configuring servers..."
+echo "Configuring servers..."
 if ansible-playbook -i inventory.ini playbook.yml; then
     print_status "Server configuration completed"
 else
@@ -78,19 +78,19 @@ else
 fi
 
 # Push to GitHub
-echo "📤 Pushing to GitHub..."
+echo "Pushing to GitHub..."
 cd ..
 ssh-agent bash -c 'ssh-add ~/.ssh/ngumonelson123_key; git add . && git commit -m "Automated deployment update" && git push origin main' || print_warning "Git push failed or no changes"
 
-echo "🎉 Deployment completed successfully!"
+echo "Deployment completed successfully!"
 echo ""
-echo "🌐 Access your services:"
+echo "Access your services:"
 echo "   Applications: https://$PROXY_SERVER_IP/api/python/ | https://$PROXY_SERVER_IP/api/node/"
 echo "   Grafana: http://$WEB_SERVER_IP:3001"
 echo "   Prometheus: http://$WEB_SERVER_IP:9090"
 echo "   cAdvisor: http://$WEB_SERVER_IP:8085"
 echo ""
-echo "🧪 Test your deployment:"
+echo "Test your deployment:"
 echo "   curl -k https://$PROXY_SERVER_IP/api/python/"
 echo "   curl -k https://$PROXY_SERVER_IP/api/node/"
 echo "   curl http://$WEB_SERVER_IP:3001"
