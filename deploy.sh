@@ -76,6 +76,8 @@ $WEB_SERVER_IP ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/devops-ke
 $PROXY_SERVER_IP ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/devops-key ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 EOF
 
+echo "Generated inventory.ini:"
+cat inventory.ini
 print_status "Inventory updated"
 
 # Wait for servers to be ready
