@@ -30,6 +30,16 @@ command -v ansible >/dev/null 2>&1 || { print_error "Ansible not installed"; exi
 command -v docker >/dev/null 2>&1 || { print_error "Docker not installed"; exit 1; }
 print_status "Prerequisites check passed"
 
+# Create S3 bucket for Terraform state if it doesn't exist
+echo "Setting up Terraform state bucket..."
+BUCKET_NAME="devops-terraform-state-1754244313"
+if ! aws s3 ls "s3://$BUCKET_NAME" 2>/dev/null; then
+    aws s3 mb "s3://$BUCKET_NAME" --region us-east-1
+    print_status "S3 bucket created: $BUCKET_NAME"
+else
+    print_status "S3 bucket already exists: $BUCKET_NAME"
+fi
+
 # Deploy infrastructure
 echo "Deploying infrastructure..."
 cd terraform
