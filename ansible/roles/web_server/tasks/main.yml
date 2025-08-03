@@ -22,7 +22,7 @@
 
 - name: Copy environment file
   copy:
-    src: .env
+    src: ../../.env
     dest: /opt/devops-app/.env
     mode: '0644'
   become: yes
