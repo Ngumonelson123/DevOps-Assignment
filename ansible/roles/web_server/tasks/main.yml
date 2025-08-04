@@ -94,6 +94,10 @@
   async: 180
   poll: 10
 
+- name: Restart monitoring to pick up config changes
+  shell: cd /opt/devops-app/monitoring && docker-compose restart prometheus
+  become: yes
+
 - name: Wait for services to be ready
   wait_for:
     port: "{{ item }}"
