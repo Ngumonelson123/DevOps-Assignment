@@ -18,10 +18,16 @@ scrape_configs:
     static_configs:
       - targets: ["{{ ansible_default_ipv4.address }}:5000"]
     metrics_path: /metrics
-    scrape_interval: 30s
+    scrape_interval: 15s
 
   - job_name: "node-app"
     static_configs:
       - targets: ["{{ ansible_default_ipv4.address }}:3000"]
     metrics_path: /metrics
-    scrape_interval: 30s
+    scrape_interval: 15s
+
+  - job_name: "postgres-exporter"
+    static_configs:
+      - targets: ["{{ ansible_default_ipv4.address }}:9187"]
+    metrics_path: /metrics
+    scrape_interval: 15s

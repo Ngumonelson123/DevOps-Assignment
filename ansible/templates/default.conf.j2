@@ -57,8 +57,16 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
+    location /postgres-metrics/ {
+        proxy_pass http://{{ hostvars[groups['WebServer'][0]]['ansible_default_ipv4']['address'] }}:9187/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
     location / {
-        return 200 "Nginx Reverse Proxy with SSL is working! Try /api/python/, /api/node/, /grafana/, /prometheus/, /cadvisor/";
+        return 200 "Nginx Reverse Proxy with SSL is working! Try /api/python/, /api/node/, /grafana/, /prometheus/, /cadvisor/, /postgres-metrics/";
         add_header Content-Type text/plain;
     }
 }

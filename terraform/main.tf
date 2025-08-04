@@ -132,6 +132,14 @@ resource "aws_security_group" "web_sg" {
   }
 
   ingress {
+    from_port   = 9187
+    to_port     = 9187
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "PostgreSQL Exporter"
+  }
+
+  ingress {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
