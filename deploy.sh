@@ -99,6 +99,11 @@ else
     exit 1
 fi
 
+# Restart monitoring and application stacks to pick up new configurations
+echo "Restarting services to apply configuration changes..."
+ssh -i ~/.ssh/devops-key -o StrictHostKeyChecking=no ubuntu@$WEB_SERVER_IP "cd /opt/monitoring && sudo docker-compose restart" || print_warning "Failed to restart monitoring stack"
+ssh -i ~/.ssh/devops-key -o StrictHostKeyChecking=no ubuntu@$WEB_SERVER_IP "cd /opt/devops-app && sudo docker-compose restart" || print_warning "Failed to restart application stack"
+
 # Push to GitHub
 echo "Pushing to GitHub..."
 cd ..
