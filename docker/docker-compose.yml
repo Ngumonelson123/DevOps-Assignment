@@ -31,6 +31,13 @@ services:
       - postgres
     networks:
       - devops_network
+    volumes:
+      - app_logs:/var/log/app
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/"]
       interval: 30s
@@ -52,6 +59,13 @@ services:
       - postgres
     networks:
       - devops_network
+    volumes:
+      - app_logs:/var/log/app
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000"]
       interval: 30s
@@ -74,3 +88,4 @@ networks:
 
 volumes:
   postgres_data:
+  app_logs:
