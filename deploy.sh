@@ -104,12 +104,8 @@ echo "Restarting services to apply configuration changes..."
 ssh -i ~/.ssh/devops-key -o StrictHostKeyChecking=no ubuntu@$WEB_SERVER_IP "cd /opt/monitoring && sudo docker-compose restart" || print_warning "Failed to restart monitoring stack"
 ssh -i ~/.ssh/devops-key -o StrictHostKeyChecking=no ubuntu@$WEB_SERVER_IP "cd /opt/devops-app && sudo docker-compose restart" || print_warning "Failed to restart application stack"
 
-# Push to GitHub
-echo "Pushing to GitHub..."
-cd ..
-git config --global user.email "action@github.com"
-git config --global user.name "GitHub Action"
-git add . && git commit -m "Automated deployment update" && git push origin main || print_warning "Git push failed or no changes"
+# Note: Git push removed to prevent conflicts with local development
+# GitHub Actions will handle repository updates
 
 echo "Deployment completed successfully!"
 echo ""
