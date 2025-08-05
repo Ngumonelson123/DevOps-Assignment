@@ -101,7 +101,8 @@ fi
 
 # Restart monitoring and application stacks to pick up new configurations
 echo "Restarting services to apply configuration changes..."
-ssh -i ~/.ssh/devops-key -o StrictHostKeyChecking=no ubuntu@$WEB_SERVER_IP "cd /opt/devops-app/monitoring && sudo docker-compose restart prometheus" || print_warning "Failed to restart monitoring stack"
+ssh -i ~/.ssh/devops-key -o StrictHostKeyChecking=no ubuntu@$WEB_SERVER_IP "cd /opt/devops-app/monitoring && sudo docker-compose restart prometheus" || print_warning "Failed to restart prometheus"
+ssh -i ~/.ssh/devops-key -o StrictHostKeyChecking=no ubuntu@$WEB_SERVER_IP "cd /opt/devops-app/monitoring && sudo docker-compose restart grafana" || print_warning "Failed to restart grafana"
 ssh -i ~/.ssh/devops-key -o StrictHostKeyChecking=no ubuntu@$WEB_SERVER_IP "cd /opt/devops-app/docker && sudo docker-compose restart" || print_warning "Failed to restart application stack"
 
 # Note: Git push removed to prevent conflicts with local development
