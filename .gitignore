@@ -6,5 +6,7 @@
 *.tfstate.*
 .terraform/
 .terraform.lock.hcl
+terraform/state.json
+terraform/tfplan
 state.json
 tfplan
