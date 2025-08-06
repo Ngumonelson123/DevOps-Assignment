@@ -58,9 +58,15 @@ case "$1" in
             echo "Usage: $0 follow [python|node|postgres]"
             exit 1
         fi
-        follow_logs "$2-service"
+        log_usage "follow-$2"
+        if [ "$2" = "postgres" ]; then
+            follow_logs "postgres"
+        else
+            follow_logs "$2-service"
+        fi
         ;;
     "events")
+        log_usage "events"
         show_structured_logs
         ;;
     *)

@@ -23,11 +23,15 @@ curl -X POST \
   --user admin:admin 2>/dev/null
 
 # Add Prometheus scrape config for log metrics
-cat >> monitoring/prometheus/prometheus.yml << EOF
+if ! grep -q "log-metrics" monitoring/prometheus/prometheus.yml; then
+    cat >> monitoring/prometheus/prometheus.yml << EOF
   - job_name: 'log-metrics'
     static_configs:
       - targets: ['localhost:9101']
+    scrape_interval: 15s
+    metrics_path: '/metrics'
 EOF
+fi
 
 # Restart Prometheus to pick up new config
 docker-compose -f monitoring/docker-compose.yml restart prometheus
@@ -35,3 +39,4 @@ docker-compose -f monitoring/docker-compose.yml restart prometheus
 echo "Log monitoring setup complete!"
 echo "Access dashboard at: http://localhost:3001/d/log-monitoring"
 echo "Start real-time monitor with: ./log-monitor.sh"
+echo "Test metrics with: ./test-log-metrics.sh"

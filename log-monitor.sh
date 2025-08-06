@@ -25,10 +25,21 @@ show_stats() {
     
     echo ""
     echo "Recent Errors (last 50 lines):"
-    docker-compose -f docker/docker-compose.yml logs --tail=50 | grep -i error | tail -5
+    docker-compose -f docker/docker-compose.yml logs --tail=50 | grep -i "error\|fatal\|panic" | tail -5
+    
+    echo ""
+    echo "PostgreSQL Status:"
+    if docker ps --format "{{.Names}}" | grep -q "postgres"; then
+        echo "  Container: Running"
+        echo "  Connections: $(docker logs postgres 2>/dev/null | grep -i connection | wc -l)"
+        echo "  Errors: $(docker logs postgres 2>/dev/null | grep -i "error\|fatal" | wc -l)"
+    else
+        echo "  Container: Not running"
+    fi
 }
 
 # Run monitoring loop
+echo "Press Ctrl+C to stop monitoring..."
 while true; do
     show_stats
     sleep 5

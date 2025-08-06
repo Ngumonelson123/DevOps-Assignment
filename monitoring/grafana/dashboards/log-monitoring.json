@@ -41,11 +41,30 @@
           "refId": "A"
         }
       ],
-      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8}
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+    },
+    {
+      "id": 4,
+      "title": "PostgreSQL Metrics",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "postgres_connections_total",
+          "legendFormat": "DB Connections",
+          "refId": "A"
+        },
+        {
+          "expr": "log_errors_total{service=\"postgres\"}",
+          "legendFormat": "DB Errors",
+          "refId": "B"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
     }
   ],
   "time": {"from": "now-1h", "to": "now"},
   "refresh": "30s",
   "version": 1,
-  "uid": "log-monitoring"
+  "uid": "log-monitoring",
+  "datasource": {"type": "prometheus", "uid": "prometheus"}
 }
