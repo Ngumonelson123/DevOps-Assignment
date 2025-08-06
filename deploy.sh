@@ -99,6 +99,10 @@ else
     exit 1
 fi
 
+# Setup log monitoring
+echo "Setting up log monitoring..."
+ssh -i ~/.ssh/devops-key -o StrictHostKeyChecking=no ubuntu@$WEB_SERVER_IP "cd /opt/devops-app && ./setup-log-monitoring.sh" || print_warning "Failed to setup log monitoring"
+
 # Restart monitoring and application stacks to pick up new configurations
 echo "Restarting services to apply configuration changes..."
 ssh -i ~/.ssh/devops-key -o StrictHostKeyChecking=no ubuntu@$WEB_SERVER_IP "cd /opt/devops-app/monitoring && sudo docker-compose restart prometheus" || print_warning "Failed to restart prometheus"
@@ -113,6 +117,7 @@ echo ""
 echo "Access your services:"
 echo "   Applications: https://$PROXY_SERVER_IP/api/python/ | https://$PROXY_SERVER_IP/api/node/"
 echo "   Grafana: http://$WEB_SERVER_IP:3001"
+echo "   Log Dashboard: http://$WEB_SERVER_IP:3001/d/log-monitoring"
 echo "   Prometheus: http://$WEB_SERVER_IP:9090"
 echo "   cAdvisor: http://$WEB_SERVER_IP:8080"
 echo ""
@@ -122,3 +127,7 @@ echo "   curl -k https://$PROXY_SERVER_IP/api/node/"
 echo "   curl http://$WEB_SERVER_IP:3001"
 echo "   curl http://$WEB_SERVER_IP:9090"
 echo "   curl http://$WEB_SERVER_IP:8080"
+echo ""
+echo "Log monitoring commands:"
+echo "   ssh -i ~/.ssh/devops-key ubuntu@$WEB_SERVER_IP 'cd /opt/devops-app && ./log-viewer.sh python'"
+echo "   ssh -i ~/.ssh/devops-key ubuntu@$WEB_SERVER_IP 'cd /opt/devops-app && ./log-monitor.sh'"

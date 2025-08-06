@@ -1,0 +1,51 @@
+{
+  "id": null,
+  "title": "Log Monitoring Dashboard",
+  "tags": ["logs", "monitoring"],
+  "timezone": "browser",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Log Viewer Usage",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "increase(log_viewer_executions_total[1h])",
+          "legendFormat": "{{command}}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+    },
+    {
+      "id": 2,
+      "title": "Error Rate by Service",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(log_errors_total[5m])",
+          "legendFormat": "{{service}} errors/sec",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+    },
+    {
+      "id": 3,
+      "title": "Log Volume",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(log_lines_total[5m])",
+          "legendFormat": "{{service}} lines/sec",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8}
+    }
+  ],
+  "time": {"from": "now-1h", "to": "now"},
+  "refresh": "30s",
+  "version": 1,
+  "uid": "log-monitoring"
+}

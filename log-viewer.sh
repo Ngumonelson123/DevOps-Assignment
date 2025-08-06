@@ -1,8 +1,18 @@
 #!/bin/bash
 
-# Log access script for all applications
+# Log access script for all applications with monitoring
 echo "=== DevOps Application Log Viewer ==="
 echo ""
+
+# Auto-enable monitoring
+export ENABLE_MONITORING=true
+
+# Log usage metrics
+log_usage() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Command: $1" >> /tmp/log-viewer-usage.log
+    # Auto-export metrics
+    ./monitoring/log-exporter.sh "$1" 2>/dev/null &
+}
 
 # Function to show logs
 show_logs() {
@@ -27,15 +37,18 @@ show_structured_logs() {
 
 case "$1" in
     "python")
+        log_usage "python"
         show_logs "python-service"
         ;;
     "node")
+        log_usage "node"
         show_logs "node-service"
         ;;
     "postgres")
         show_logs "postgres"
         ;;
     "all")
+        log_usage "all"
         show_logs "python-service"
         show_logs "node-service"
         show_logs "postgres"
