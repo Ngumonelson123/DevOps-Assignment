@@ -4,7 +4,7 @@
 echo "Setting up log monitoring..."
 
 # Make scripts executable
-chmod +x log-viewer.sh log-monitor.sh monitoring/log-exporter.sh
+chmod +x log-viewer.sh log-monitor.sh monitoring/log-exporter.sh generate-test-data.sh fix-dashboard.sh
 
 # Create log directory
 mkdir -p /tmp/logs
@@ -35,6 +35,11 @@ fi
 
 # Restart Prometheus to pick up new config
 docker-compose -f monitoring/docker-compose.yml restart prometheus
+
+# Generate test data and fix dashboard
+echo "Generating test data for dashboard..."
+./generate-test-data.sh
+sleep 5
 
 echo "Log monitoring setup complete!"
 echo "Access dashboard at: http://localhost:3001/d/log-monitoring"

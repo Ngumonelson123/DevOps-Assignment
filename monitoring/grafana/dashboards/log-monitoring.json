@@ -10,7 +10,7 @@
       "type": "stat",
       "targets": [
         {
-          "expr": "increase(log_viewer_executions_total[1h])",
+          "expr": "log_viewer_executions_total",
           "legendFormat": "{{command}}",
           "refId": "A"
         }
@@ -23,8 +23,8 @@
       "type": "timeseries",
       "targets": [
         {
-          "expr": "rate(log_errors_total[5m])",
-          "legendFormat": "{{service}} errors/sec",
+          "expr": "log_errors_total",
+          "legendFormat": "{{service}} errors",
           "refId": "A"
         }
       ],
@@ -36,8 +36,8 @@
       "type": "timeseries",
       "targets": [
         {
-          "expr": "rate(log_lines_total[5m])",
-          "legendFormat": "{{service}} lines/sec",
+          "expr": "log_lines_total",
+          "legendFormat": "{{service}} lines",
           "refId": "A"
         }
       ],
