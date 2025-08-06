@@ -95,12 +95,14 @@ for i in {1..6}; do
     sleep 5
 done
 
-# Configure servers with Ansible (parallel)
+# Configure servers with Ansible
 echo "Configuring servers..."
-if ansible-playbook -i inventory.ini playbook.yml --forks=10 --strategy=free; then
+if ansible-playbook -i inventory.ini playbook.yml -v; then
     print_status "Server configuration completed"
 else
     print_error "Server configuration failed"
+    echo "Checking Ansible connectivity..."
+    ansible all -i inventory.ini -m ping
     exit 1
 fi
 

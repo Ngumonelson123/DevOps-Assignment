@@ -1,19 +1,21 @@
 - name: Update APT cache
   apt:
     update_cache: yes
+    cache_valid_time: 3600
+  become: yes
 
 - name: Install base packages
   apt:
-    name: "{{ item }}"
+    name:
+      - docker.io
+      - git
+      - python3
+      - python3-pip
+      - nodejs
+      - npm
+      - curl
     state: present
-  loop:
-    - docker.io
-    - git
-    - python3
-    - python3-pip
-    - nodejs
-    - npm
-    - curl
+  become: yes
 
 - name: Install Docker Compose v2
   shell: |
@@ -27,9 +29,11 @@
     name: docker
     enabled: yes
     state: started
+  become: yes
 
 - name: Add user to Docker group
   user:
     name: ubuntu
     groups: docker
     append: yes
+  become: yes
