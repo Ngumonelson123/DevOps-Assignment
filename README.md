@@ -378,12 +378,6 @@ This project includes comprehensive documentation:
 # One-command deployment
 ./deploy.sh
 
-# Fix permissions if needed
-./fix-permissions.sh
-
-# Quick validation test
-./quick-test.sh
-
 # Comprehensive testing
 ./test-deployment.sh
 
