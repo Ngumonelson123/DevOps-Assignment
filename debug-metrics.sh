@@ -4,10 +4,18 @@ echo "=== Debug Log Metrics ==="
 
 # Check if metrics server is running
 echo "1. Checking metrics server on port 9101:"
-if netstat -tuln | grep -q ":9101"; then
-    echo "✓ Port 9101 is open"
+if command -v netstat >/dev/null 2>&1; then
+    if netstat -tuln | grep -q ":9101"; then
+        echo "✓ Port 9101 is open"
+    else
+        echo "✗ Port 9101 is not open"
+    fi
 else
-    echo "✗ Port 9101 is not open"
+    if ss -tuln | grep -q ":9101" 2>/dev/null; then
+        echo "✓ Port 9101 is open (using ss)"
+    else
+        echo "✗ Port 9101 is not open (using ss)"
+    fi
 fi
 
 # Check metrics endpoint
@@ -58,7 +66,11 @@ echo "5. Testing Prometheus query:"
 RESULT=$(curl -s "http://localhost:9090/api/v1/query?query=log_lines_total" 2>/dev/null)
 if echo "$RESULT" | grep -q "result"; then
     echo "✓ Query successful"
-    echo "$RESULT" | jq '.data.result[0].metric // "No data"'
+    if command -v jq >/dev/null 2>&1; then
+        echo "$RESULT" | jq '.data.result[0].metric // "No data"'
+    else
+        echo "Query result: $RESULT" | head -c 100
+    fi
 else
     echo "✗ Query failed"
 fi

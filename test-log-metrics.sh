@@ -15,4 +15,8 @@ curl -s http://localhost:9101/metrics
 
 echo ""
 echo "Checking Prometheus targets..."
-curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | select(.labels.job=="log-metrics")'
+if command -v jq >/dev/null 2>&1; then
+    curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | select(.labels.job=="log-metrics")'
+else
+    curl -s http://localhost:9090/api/v1/targets | grep -o '"log-metrics"' || echo "log-metrics target not found"
+fi

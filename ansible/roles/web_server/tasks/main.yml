@@ -1,8 +1,13 @@
 ---
-- name: Install git
+- name: Install required packages
   apt:
-    name: git
+    name: 
+      - git
+      - net-tools
+      - jq
+      - curl
     state: present
+    update_cache: yes
   become: yes
 
 - name: Remove existing app directory

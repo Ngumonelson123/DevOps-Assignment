@@ -31,3 +31,9 @@ scrape_configs:
       - targets: ["host.docker.internal:9187"]
     metrics_path: /metrics
     scrape_interval: 15s
+
+  - job_name: "log-metrics"
+    static_configs:
+      - targets: ["host.docker.internal:9101"]
+    metrics_path: /metrics
+    scrape_interval: 30s
