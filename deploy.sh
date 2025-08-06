@@ -101,7 +101,7 @@ fi
 
 # Setup log monitoring
 echo "Setting up log monitoring..."
-ssh -i ~/.ssh/devops-key -o StrictHostKeyChecking=no ubuntu@$WEB_SERVER_IP "cd /opt/devops-app && chmod +x *.sh && ./setup-log-monitoring.sh" || print_warning "Failed to setup log monitoring"
+ssh -i ~/.ssh/devops-key -o StrictHostKeyChecking=no ubuntu@$WEB_SERVER_IP "cd /opt/devops-app && sudo chmod +x *.sh && ./setup-log-monitoring.sh" || print_warning "Failed to setup log monitoring"
 
 # Restart monitoring and application stacks to pick up new configurations
 echo "Restarting services to apply configuration changes..."

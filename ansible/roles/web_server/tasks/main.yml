@@ -98,6 +98,26 @@
   shell: cd /opt/devops-app/monitoring && docker-compose restart prometheus
   become: yes
 
+- name: Make shell scripts executable
+  file:
+    path: "/opt/devops-app/{{ item }}"
+    mode: '0755'
+  become: yes
+  loop:
+    - debug-metrics.sh
+    - deploy.sh
+    - fix-dashboard.sh
+    - generate-test-data.sh
+    - log-monitor.sh
+    - log-viewer.sh
+    - setup-log-monitoring.sh
+    - simple-metrics.sh
+    - test-deployment.sh
+    - test-log-metrics.sh
+    - update-inventory.sh
+    - monitoring/log-exporter.sh
+  ignore_errors: yes
+
 - name: Wait for services to be ready
   wait_for:
     port: "{{ item }}"
