@@ -9,37 +9,27 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        app: [python, nodejs]
     steps:
     - uses: actions/checkout@v3
     
     - name: Set up Python
-      if: matrix.app == 'python'
       uses: actions/setup-python@v3
       with:
         python-version: '3.11'
-    
-    - name: Test Python app
-      if: matrix.app == 'python'
-      run: |
-        cd app-python
-        pip install -r requirements.txt
-        python -m py_compile app.py
+        cache: 'pip'
     
     - name: Set up Node.js
-      if: matrix.app == 'nodejs'
       uses: actions/setup-node@v3
       with:
         node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: 'app-nodejs/package-lock.json'
     
-    - name: Test Node.js app
-      if: matrix.app == 'nodejs'
+    - name: Test apps in parallel
       run: |
-        cd app-nodejs
-        npm install
-        node -c index.js
+        cd app-python && pip install -r requirements.txt && python -m py_compile app.py &
+        cd app-nodejs && npm install && node -c index.js &
+        wait
 
   deploy:
     needs: test

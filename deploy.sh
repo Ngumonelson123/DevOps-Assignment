@@ -43,9 +43,9 @@ fi
 # Deploy infrastructure
 echo "Deploying infrastructure..."
 cd terraform
-terraform init -reconfigure
-if terraform plan -out=tfplan; then
-    terraform apply tfplan
+terraform init -reconfigure -input=false
+if terraform plan -out=tfplan -input=false; then
+    terraform apply -input=false tfplan
     print_status "Infrastructure deployed"
 else
     print_error "Infrastructure deployment failed"
@@ -86,22 +86,27 @@ echo "Generated inventory.ini:"
 cat inventory.ini
 print_status "Inventory updated"
 
-# Wait for servers to be ready
-echo "Waiting for servers to be ready..."
-sleep 30
+# Quick connectivity check
+echo "Checking server connectivity..."
+for i in {1..6}; do
+    if ssh -i ~/.ssh/devops-key -o ConnectTimeout=5 -o StrictHostKeyChecking=no ubuntu@$WEB_SERVER_IP "echo ready" >/dev/null 2>&1; then
+        break
+    fi
+    sleep 5
+done
 
-# Configure servers with Ansible
+# Configure servers with Ansible (parallel)
 echo "Configuring servers..."
-if ansible-playbook -i inventory.ini playbook.yml --forks=10; then
+if ansible-playbook -i inventory.ini playbook.yml --forks=10 --strategy=free; then
     print_status "Server configuration completed"
 else
     print_error "Server configuration failed"
     exit 1
 fi
 
-# Wait for services to be ready
-echo "Waiting for services to start..."
-sleep 30
+# Quick service check
+echo "Verifying services..."
+sleep 10
 
 # Note: Git push removed to prevent conflicts with local development
 # GitHub Actions will handle repository updates
